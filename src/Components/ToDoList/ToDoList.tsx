@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import ToDoListElement from './ToDoListElement';
+
 type ListElement = {
     name:string,
     desc:string
@@ -8,20 +10,40 @@ const ToDoList = () => {
     const [desc,setDesc] = useState('');
 
     const [list,setList] = useState<ListElement[]>([]);
-    const AddElement = () =>{
-        setList([{
-            name:name,
-            desc:desc
-            }])
+    const AddElement = () => {
+        const newList = [...list, {
+            name: name,
+            desc: desc
+        }]
+
+        setList(newList)
+        setName('')
+        setDesc('')
     }
+    const DeleteElement = (index: number) => {
+        const filter = list.filter((el, i) => i !== index)
+
+        setList(filter);
+    }
+    
     return (
         <div>
             <input type="text" placeholder={"name"} value={name} onChange={(e)=>setName(e.target.value)}/>
             <input type="text" placeholder={"description"}value={desc} onChange={(e)=>setDesc(e.target.value)}/>
             <div>
-                <button onClick={}>Добавить список</button>
+                <button onClick={() => AddElement()}>
+                    Добавить список
+                    </button>
+            </div>
+            <div>
+                {list.map((el, i) => <ToDoListElement
+                    name={el.name}
+                    desc={el.desc}
+                    onDeleteClick={() => DeleteElement(i)}
+                />)}
             </div>
         </div>
+    
     );
 };
 
